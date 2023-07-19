@@ -3,6 +3,7 @@ const router = require("express").Router();
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const authMiddleware = require("../middlewares/authMiddleware"); 
 //new user registration this is an api
 
 router.post("/register", async (req, res) => {
@@ -65,5 +66,26 @@ router.post("/login", async (req, res) => {
     });
   }
 });
+
+
+// protected apis- related to middleware
+//get current user
+
+router.get("/get-current-user",authMiddleware,async(req,res)=>{
+  try {
+    const user=await User.findById(req.body.userId);
+    res.send({
+      success: true,
+      message: "User fetched successfully",
+      data: user, 
+    })
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+})
+
 
 module.exports = router;

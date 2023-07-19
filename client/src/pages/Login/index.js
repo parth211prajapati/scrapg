@@ -15,6 +15,7 @@ const onFinish= async (values)=>{
     if(response.success){
       message.success(response.message);
       localStorage.setItem("token",response.data);
+      window.location.href="/"; 
     }
     else{
       throw new Error(response.message);
