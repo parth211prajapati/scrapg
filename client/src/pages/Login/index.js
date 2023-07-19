@@ -1,15 +1,27 @@
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Divider from '../../components/Divider'
+import { LoginUser } from '../../apicalls/users'
 
 const rules=[{
   required: true,
   message: "required",
 },]
 
-const onFinish=(values)=>{
-  console.log("Success:",values)
+const onFinish= async (values)=>{
+  try {
+    const response= await LoginUser(values);
+    if(response.success){
+      message.success(response.message);
+      localStorage.setItem("token",response.data);
+    }
+    else{
+      throw new Error(response.message);
+    }
+  } catch (error) {
+    message.error(error.message);
+  }
 }
 
 
