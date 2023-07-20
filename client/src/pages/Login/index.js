@@ -1,32 +1,45 @@
 import { Button, Form, Input, message } from 'antd'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Divider from '../../components/Divider'
 import { LoginUser } from '../../apicalls/users'
+import { SetLoader, setLoader } from '../../redux/loaderSlide'
+import { useDispatch } from 'react-redux'
 
 const rules=[{
   required: true,
   message: "required",
 },]
 
-const onFinish= async (values)=>{
-  try {
-    const response= await LoginUser(values);
-    if(response.success){
-      message.success(response.message);
-      localStorage.setItem("token",response.data);
-      window.location.href="/"; 
-    }
-    else{
-      throw new Error(response.message);
-    }
-  } catch (error) {
-    message.error(error.message);
-  }
-}
 
 
 function Login() {
+  const navigate=useNavigate();
+  const dispatch=useDispatch();
+  const onFinish= async (values)=>{
+    try {
+      dispatch(SetLoader(true))
+      const response= await LoginUser(values);
+      dispatch(SetLoader(false))
+      if(response.success){
+        message.success(response.message);
+        localStorage.setItem("token",response.data);
+        window.location.href="/"; 
+      }
+      else{
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      dispatch(SetLoader(false))
+      message.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if(localStorage.getItem("token")){
+      navigate("/")
+    }
+  }, [])
   
   return (
     <div className='bg-primary h-screen flex justify-center items-center'>

@@ -1,8 +1,10 @@
 import { Button, Form, Input, message } from "antd";
-import React from "react";
-import { Link } from "react-router-dom";
+import {useEffect} from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Divider from "../../components/Divider";
 import { RegisterUser } from "../../apicalls/users";
+import { useDispatch } from "react-redux";
+import { SetLoader } from "../../redux/loaderSlide";
 
 const rules = [
   {
@@ -14,18 +16,29 @@ const rules = [
 
 
 function Register() {
+  const navigate=useNavigate();
+  const dispatch=useDispatch();
   const onFinish = async (values) => {
     try {
+      dispatch(SetLoader(true));
       const response = await RegisterUser(values);
+      navigate("/login");
+      dispatch(SetLoader(false))
       if (response.success) {
         message.success(response.message);
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
+      dispatch(SetLoader(false));
       message.error(error.message);
     }
   };
+  useEffect(() => {
+    if(localStorage.getItem("token")){
+      navigate("/");
+    }
+  }, [])
   return (
     <div className="bg-primary h-screen flex justify-center items-center">
       <div className="bg-white p-5 rounded w-[450px]">
