@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Divider from '../../components/Divider'
 import { LoginUser } from '../../apicalls/users'
-import { SetLoader, setLoader } from '../../redux/loaderSlide'
+import { SetLoader } from '../../redux/loaderSlide'
 import { useDispatch } from 'react-redux'
 
 const rules=[{

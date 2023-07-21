@@ -17,8 +17,9 @@ const port= process.env.PORT || 5000;
 //     next();
 //   });
 
-const usersRoute=require('./routes/usersRoute')
-
+const usersRoute=require('./routes/usersRoute');
+const productsRoute=require('./routes/productsRoute');
 app.use('/api/users',usersRoute);
+app.use('/api/products',productsRoute);
 
 app.listen(port,()=>{console.log(`Node/Express JS Server started on port ${port}`)});

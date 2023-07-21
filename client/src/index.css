@@ -4,15 +4,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;600&display=swap');
 *{
     margin: 0;
-    padding: 0;
+    padding: 0; /* to remove the extra white space of the whole page*/
     box-sizing: border-box; 
     font-family: 'Poppins', sans-serif !important;
-} /* to remove the extra white space of the whole page*/
-input{
-    height: 45px !important;
-    border: 1px solid #b9b9b9 !important;
+    font-size: 15px;
 }
-input:focus{
+input,select, textarea{
+    min-height: 45px !important;
+    border: 1px solid #b9b9b9 !important;
+    width: 100% !important;
+}
+input:focus, textarea:focus, select:focus{
     outline: none !important;
     border: 1px solid #747474 !important;
     box-shadow: none !important;
@@ -20,4 +22,11 @@ input:focus{
 }
 button{
     height: 45px !important;
+}
+table{
+    border: #a1a1a1 1px solid !important;
+    border-radius: 2px;
+}
+i{
+    font-size: 20px;
 }

@@ -42,7 +42,9 @@ function ProtectedPage({ children }) {
           <h1 className="text-2xl text-white">SCRAPG</h1>
           <div className="bg-white flex gap-1 items-center py-2 px-5 rounded">
             <i className="ri-shield-user-line"></i>
-            <span className="underline cursor-pointer uppercase">
+            <span className="underline cursor-pointer uppercase" onClick={()=>{
+              navigate("/profile")
+            }}>
               {user.name}
             </span>
             <i
