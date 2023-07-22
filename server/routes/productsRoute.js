@@ -22,7 +22,7 @@ router.post("/add-product",authMiddleware,async(req,res)=>{
 //get-all-products
 router.get('/get-products',async(req,res)=>{
     try {
-        const products=await Product.find();
+        const products=await Product.find().sort({createdAt: -1});
         res.send({
             success: true,
             products,
@@ -34,5 +34,38 @@ router.get('/get-products',async(req,res)=>{
         });
     }
 });
+
+//edit product
+router.put("/edit-product/:id", authMiddleware, async (req, res) => {
+  try {
+    await Product.findByIdAndUpdate(req.params.id, req.body);
+    res.send({
+      success: true,
+      message: "Product updated successfully",
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+//delete product
+router.delete("/delete-product/:id",authMiddleware,async(req,res)=>{
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.send({
+      success: true,
+      message: "Product deleted successsully"
+    })
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message
+    })
+  }
+})
+
 
 module.exports= router;

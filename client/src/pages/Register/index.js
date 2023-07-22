@@ -43,7 +43,7 @@ function Register() {
     <div className="bg-primary h-screen flex justify-center items-center">
       <div className="bg-white p-5 rounded w-[450px]">
         <h1 className="text-primary text-2xl">
-          SCRAPG - <span className="text-gray-400">REGISTER</span>
+          SCRAPG - <span className="text-gray-400 text-2xl">REGISTER</span>
         </h1>
         <Divider />
         <Form layout="vertical" onFinish={onFinish}>

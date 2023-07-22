@@ -1,9 +1,9 @@
 import { Col, Form, Input, Modal, Row, Tabs } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SetLoader } from "../../../redux/loaderSlide";
-import { AddProduct } from "../../../apicalls/products";
+import { AddProduct, EditProduct } from "../../../apicalls/products";
 import { message } from "antd";
 
 const rules = [
@@ -13,18 +13,25 @@ const rules = [
   },
 ];
 
-function ProductsForm({ showProductForm, setShowProductForm }) {
+function ProductsForm({ showProductForm, setShowProductForm, selectedProduct, getData}) {
     const dispatch=useDispatch();
     const {user}= useSelector(state=>state.users)
     const onFinish=async (values)=>{
         try {
-            values.seller=user._id;
-            values.status="pending";    
             dispatch(SetLoader(true));
-            const response=await AddProduct(values);
+            let response=null;
+            if(selectedProduct){
+              response=await EditProduct(selectedProduct._id,values);
+            }
+            else{
+              values.seller=user._id;
+              values.status="pending";
+             response= await AddProduct(values);
+            }
             dispatch(SetLoader(false));
             if(response.success){
                 message.success(response.message);
+                getData();
                 setShowProductForm(false);
             }
             else{
@@ -36,6 +43,14 @@ function ProductsForm({ showProductForm, setShowProductForm }) {
         }
     }
     const formRef=useRef(null);
+
+    useEffect(()=>{
+      if(selectedProduct){
+        formRef.current.setFieldsValue(selectedProduct);
+      }
+    },[selectedProduct]);
+
+
   return (
     <Modal
       title=""
@@ -48,45 +63,50 @@ function ProductsForm({ showProductForm, setShowProductForm }) {
         formRef.current.submit();
       }}
     >
-      <Tabs defaultActiveKey="1">
-        <Tabs.TabPane tab="General" key="1">
-          <Form layout="vertical" ref={formRef} onFinish={onFinish}>
-            <Form.Item label="Name" name="name" rules={rules}>
-              <Input type="text"></Input>
-            </Form.Item>
-            <Form.Item label="Description" name="description" rules={rules}>
-              <TextArea type="text" />
-            </Form.Item>
-            <Row gutter={[16, 16]}>
-              {/* it has 24 columns */}
-              <Col span={8}>
-                <Form.Item label="Price" name="price" rules={rules}>
-                  <Input type="number" />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item label="Category" name="category" rules={rules}>
-                  <select name="" id="">
-                    <option value="metal">Metal</option>
-                    <option value="alloy">Alloys</option>
-                    <option value="appliance">Appliance</option>
-                    <option value="can">Cans</option>
-                    <option value="paper">Paper</option>
-                  </select>
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item label="Weight" name="weight" rules={rules}>
-                  <Input type="number" placeholder="in Kg" />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Images" key="2">
-          <h1>Images</h1>
-        </Tabs.TabPane>
-      </Tabs>
+      <div>
+        <h1 className="text-2xl text-primary text-center font-semibold uppercase">
+            {selectedProduct ? "Edit Product": "Add Product"}
+          </h1> 
+        <Tabs defaultActiveKey="1">
+          <Tabs.TabPane tab="General" key="1">
+            <Form layout="vertical" ref={formRef} onFinish={onFinish}>
+              <Form.Item label="Name" name="name" rules={rules}>
+                <Input type="text"></Input>
+              </Form.Item>
+              <Form.Item label="Description" name="description" rules={rules}>
+                <TextArea type="text" />
+              </Form.Item>
+              <Row gutter={[16, 16]}>
+                {/* it has 24 columns */}
+                <Col span={8}>
+                  <Form.Item label="Price" name="price" rules={rules}>
+                    <Input type="number" />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label="Category" name="category" rules={rules}>
+                    <select name="" id="">
+                      <option value="metal">Metal</option>
+                      <option value="alloy">Alloys</option>
+                      <option value="appliance">Appliance</option>
+                      <option value="can">Cans</option>
+                      <option value="paper">Paper</option>
+                    </select>
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label="Weight" name="weight" rules={rules}>
+                    <Input type="number" placeholder="in Kg" />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Images" key="2">
+            <h1>Images</h1>
+          </Tabs.TabPane>
+        </Tabs>
+      </div> 
     </Modal>
   );
 }
