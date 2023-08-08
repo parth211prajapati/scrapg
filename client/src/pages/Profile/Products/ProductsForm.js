@@ -1,10 +1,11 @@
 import { Col, Form, Input, Modal, Row, Tabs } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SetLoader } from "../../../redux/loaderSlide";
 import { AddProduct, EditProduct } from "../../../apicalls/products";
 import { message } from "antd";
+import Images from "./Images";
 
 const rules = [
   {
@@ -14,6 +15,7 @@ const rules = [
 ];
 
 function ProductsForm({ showProductForm, setShowProductForm, selectedProduct, getData}) {
+  const [selectedTab="1",setSelectedTab]=useState("1");
     const dispatch=useDispatch();
     const {user}= useSelector(state=>state.users)
     const onFinish=async (values)=>{
@@ -62,12 +64,16 @@ function ProductsForm({ showProductForm, setShowProductForm, selectedProduct, ge
       onOk={()=>{
         formRef.current.submit();
       }}
+      {...(selectedTab==="2" && {footer:false})}
     >
       <div>
         <h1 className="text-2xl text-primary text-center font-semibold uppercase">
-            {selectedProduct ? "Edit Product": "Add Product"}
+            {selectedProduct ? "Edit Item": "Add Item"}
           </h1> 
-        <Tabs defaultActiveKey="1">
+        <Tabs defaultActiveKey="1"
+          activeKey={selectedTab}
+          onChange={(key)=>{setSelectedTab(key)}}
+        >
           <Tabs.TabPane tab="General" key="1">
             <Form layout="vertical" ref={formRef} onFinish={onFinish}>
               <Form.Item label="Name" name="name" rules={rules}>
@@ -102,8 +108,8 @@ function ProductsForm({ showProductForm, setShowProductForm, selectedProduct, ge
               </Row>
             </Form>
           </Tabs.TabPane>
-          <Tabs.TabPane tab="Images" key="2">
-            <h1>Images</h1>
+          <Tabs.TabPane tab="Images" key="2" disabled={!selectedProduct}>
+            <Images selectedProduct={selectedProduct} setShowProductForm={setShowProductForm}getData={getData} />
           </Tabs.TabPane>
         </Tabs>
       </div> 

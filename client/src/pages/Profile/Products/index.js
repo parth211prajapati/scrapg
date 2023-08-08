@@ -104,7 +104,7 @@ function Products() {
           setSelectedProduct(null)
           setShowProductForm(true)}
           }>
-          Add Product
+          Add Item
         </Button>
       </div>
       <Table columns={columns} dataSource={products}/>
