@@ -77,7 +77,7 @@ function ProductsForm({ showProductForm, setShowProductForm, selectedProduct, ge
           <Tabs.TabPane tab="General" key="1">
             <Form layout="vertical" ref={formRef} onFinish={onFinish}>
               <Form.Item label="Name" name="name" rules={rules}>
-                <Input type="text"></Input>
+                <Input type="text"/>
               </Form.Item>
               <Form.Item label="Description" name="description" rules={rules}>
                 <TextArea type="text" />
@@ -109,7 +109,7 @@ function ProductsForm({ showProductForm, setShowProductForm, selectedProduct, ge
             </Form>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Images" key="2" disabled={!selectedProduct}>
-            <Images selectedProduct={selectedProduct} setShowProductForm={setShowProductForm}getData={getData} />
+            <Images selectedProduct={selectedProduct} getData={getData} setShowProductForm={setShowProductForm} />
           </Tabs.TabPane>
         </Tabs>
       </div> 
