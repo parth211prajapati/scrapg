@@ -39,11 +39,15 @@ function ProtectedPage({ children }) {
     user && (
       <div>
         <div className="flex justify-between items-center bg-primary p-5">
-          <h1 className="text-2xl text-white">SCRAPG</h1>
+          <h1 className="text-2xl text-white cursor-pointer" onClick={()=>{navigate("/")}}>SCRAPG</h1>
           <div className="bg-white flex gap-1 items-center py-2 px-5 rounded">
             <i className="ri-shield-user-line"></i>
             <span className="underline cursor-pointer uppercase" onClick={()=>{
-              navigate("/profile")
+              if(user.role=="user"){
+                navigate("/profile");
+              }else{
+                navigate("/admin");
+              }
             }}>
               {user.name}
             </span>

@@ -41,6 +41,11 @@ router.post("/login", async (req, res) => {
     if (!user) {
       throw new Error("User not found");
     }
+
+    //if user's status is active or not
+    if(user.status !== "active"){
+      throw new Error("The user account is blocked, please contact admin");
+    }
     //part 2 compare password
     const validpassword =await bcrypt.compare(
       //.compare is an inbuild method of bcrypt
@@ -87,5 +92,37 @@ router.get("/get-current-user",authMiddleware,async(req,res)=>{
   }
 })
 
+//get-all-users
+router.get("/get-users",authMiddleware,async(req,res)=>{
+  try {
+    const users=await User.find();
+    res.send({
+      success:true,
+      message: "Users fetched successfully",
+      data: users,
+    });
+  } catch (error) {
+    res.send({
+        success: false,
+        message: error.message,
+      });
+  }
+});
 
+//update user status
+
+router.put("/update-user-status/:id",authMiddleware,async(req,res)=>{
+  try {
+    await User.findByIdAndUpdate(req.params.id,req.body);
+    res.send({
+      success: true,
+      message: "User status updated successfully",
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 module.exports = router;

@@ -21,12 +21,17 @@ router.post("/add-product",authMiddleware,async(req,res)=>{
 });
 
 //get-all-products
-router.get('/get-products',async(req,res)=>{
+router.post('/get-products',async(req,res)=>{
     try {
-        const products=await Product.find().sort({createdAt: -1});
+      const {seller,categories=[],weight=[]}=req.body
+      let filters={}
+      if(seller){
+        filters.seller=seller;
+      }
+        const products=await Product.find(filters).populate('seller').sort({createdAt: -1});
         res.send({
             success: true,
-            products,
+            data : products,
         });
     } catch (error) {
         res.send({
@@ -34,6 +39,22 @@ router.get('/get-products',async(req,res)=>{
             message: error.message
         });
     }
+});
+
+//get product by id
+router.get("/get-product-by-id/:id",async(req,res)=>{
+  try {
+    const product=await Product.findById(req.params.id).populate("seller");
+    res.send({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
 });
 
 //edit product
@@ -98,6 +119,23 @@ router.post("/upload-image-to-product",authMiddleware,multer({storage:storage}).
   }
 })
 
+//update product status 
+router.put("/update-product-status/:id",authMiddleware,async(req,res)=>{
+  try{
+    const {status}=req.body;
+    await Product.findByIdAndUpdate(req.params.id,{status});
+    res.send({
+      success: true,
+      message: "Product status updated successfully",
+    });
+  }
+  catch(error){
+    res.send({
+      success: false,
+      message: error.message,
+    })
+  }
+})
 
 
 

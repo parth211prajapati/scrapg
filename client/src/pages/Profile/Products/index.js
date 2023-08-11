@@ -1,24 +1,29 @@
 import { Button,message,Table } from "antd";
 import React, { useEffect, useState } from "react";
 import ProductsForm from "./ProductsForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { DeleteProduct, GetProducts } from "../../../apicalls/products";
 import { SetLoader } from "../../../redux/loaderSlide";
 import moment from "moment";
+import Bids from "./Bids";
 
 function Products() {
+  cosnt [showBids,setShowBids]=useState(false);
   const [selectedProduct,setSelectedProduct]=useState(null);
   const [products,setProducts]=useState([]);
   const [showProductForm, setShowProductForm] = useState(false);
+  const {user}=useSelector((state)=>state.users);
   const dispatch=useDispatch();
   
   const getData=async()=>{
     try {
       dispatch(SetLoader(true));
-      const response=await GetProducts();
+      const response=await GetProducts({
+        seller: user._id, 
+      });
       dispatch(SetLoader(false));
       if(response.success){
-        setProducts(response.products)
+        setProducts(response.data)
       }
     } catch (error) {
       dispatch(SetLoader(false));
@@ -78,7 +83,7 @@ function Products() {
       title: "Action",
       dataIndex: "action",
       render: (text,record)=>{
-        return(<div className="flex gap-5">
+        return(<div className="flex gap-5 items-center">
           <i className="ri-delete-bin-line" onClick={()=>{
             deleteProduct(record._id)}
           }></i>
@@ -87,6 +92,12 @@ function Products() {
             setShowProductForm(true);
           }}>
           </i>
+          <span className="underline cursor-pointer" onClick={()=>{
+            setSelectedProduct(record);
+            setShowBids(true);
+          }}>
+            Show Bids
+          </span>
         </div>)
       }
     },
@@ -115,6 +126,12 @@ function Products() {
           selectedProduct={selectedProduct}
           getData={getData}
         />
+      )}
+      {showBids && (
+        <Bids 
+        showBidsModal={showBids}
+        setShowBidsModal={setShowBids}
+        selectedProduct={selectedProduct}/>
       )}
     </>
   );

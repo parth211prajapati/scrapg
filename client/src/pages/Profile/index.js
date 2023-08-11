@@ -6,7 +6,7 @@ function Profile() {
   return (
     <div>
         <Tabs defaultActiveKey='1'>
-            <Tabs.TabPane tab="Products" key="1">
+            <Tabs.TabPane tab="Items" key="1">
                 <Products/>
             </Tabs.TabPane>
             <Tabs.TabPane tab="Bids" key="2">
