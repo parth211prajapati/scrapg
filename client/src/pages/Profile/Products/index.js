@@ -8,7 +8,7 @@ import moment from "moment";
 import Bids from "./Bids";
 
 function Products() {
-  cosnt [showBids,setShowBids]=useState(false);
+  const [showBids,setShowBids]=useState(false);
   const [selectedProduct,setSelectedProduct]=useState(null);
   const [products,setProducts]=useState([]);
   const [showProductForm, setShowProductForm] = useState(false);

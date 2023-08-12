@@ -12,7 +12,7 @@ router.post("/place-new-bid",authMiddleware, async (req, res) => {
   }
 });
 //get all bids
-router.get("/get-all-bids", authMiddleware, async (req, res) => {
+router.post("/get-all-bids", authMiddleware, async (req, res) => {
   try {
     const {product,seller}=req.body
     let filters={}
@@ -26,6 +26,7 @@ router.get("/get-all-bids", authMiddleware, async (req, res) => {
       .populate("product")
       .populate("buyer")
       .populate("seller");
+      res.send({success:false,data:bids});
   } catch (error) {
     res.send({ success: false, message: error.message });
   }
